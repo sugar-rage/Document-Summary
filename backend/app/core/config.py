@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 10 * 1024 * 1024
     max_pdf_pages: int = 20
     max_extracted_chars: int = 200_000
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173,https://document-summary-frontend-l5hk.onrender.com"
 
     @property
     def cors_origin_list(self) -> list[str]:
