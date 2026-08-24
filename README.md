@@ -105,11 +105,23 @@ Free-tier prompts may be used by Google to improve products. Rate limits apply (
 
 ## Tesseract / OCR setup
 
-Windows (local): install Tesseract from the official installer and add it to PATH.
+Tesseract OCR is required for processing scanned PDFs and images. Text-based PDFs are extracted directly via PyMuPDF without requiring OCR.
 
-Docker: `backend/Dockerfile` installs `tesseract-ocr`.
+- **Docker (Recommended for Cloud & Local)**: `backend/Dockerfile` automatically installs `tesseract-ocr` and `tesseract-ocr-eng`.
+- **Linux (Ubuntu / Debian / Cloud VPS)**:
+  ```bash
+  sudo apt-get update && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
+  ```
+- **Cloud Platforms (Render / Railway / Heroku)**:
+  - **Docker deployments**: Use `backend/Dockerfile` (built-in).
+  - **Buildpack deployments**: The included `Aptfile` automatically installs `tesseract-ocr` and `tesseract-ocr-eng`.
+- **macOS**:
+  ```bash
+  brew install tesseract
+  ```
+- **Windows (Local development)**:
+  Install Tesseract using the official Windows installer (e.g. from UB-Mannheim/tesseract) and ensure the install directory is added to your system `PATH`.
 
-English only in v1.
 
 ## Running the backend
 

@@ -16,13 +16,20 @@ def process_file(path: Path, content_type: str) -> tuple[str, str, int]:
     if is_meaningful_text(text, page_count):
         return _clip(text), "pymupdf", page_count
 
-    ocr_text, page_count = ocr_pdf(path)
-    if is_meaningful_text(ocr_text, page_count) or (
-        ocr_text and len(ocr_text) > len(text)
-    ):
-        method = "hybrid" if text else "ocr"
-        combined = ocr_text if len(ocr_text) >= len(text) else text
-        return _clip(combined), method, page_count
+    try:
+        ocr_text, page_count = ocr_pdf(path)
+        if is_meaningful_text(ocr_text, page_count) or (
+            ocr_text and len(ocr_text) > len(text)
+        ):
+            method = "hybrid" if text else "ocr"
+            combined = ocr_text if len(ocr_text) >= len(text) else text
+            return _clip(combined), method, page_count
+    except Exception as exc:
+        # If OCR fails or Tesseract is unavailable, but we have some extracted text from PyMuPDF
+        if text and text.strip():
+            return _clip(text), "pymupdf", page_count
+        # If no text at all and OCR failed/unavailable, re-raise the exception
+        raise exc
 
     if text:
         return _clip(text), "pymupdf", page_count
